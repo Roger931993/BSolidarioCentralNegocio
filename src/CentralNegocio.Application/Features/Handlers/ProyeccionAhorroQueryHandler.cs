@@ -7,6 +7,7 @@ using CentralNegocio.Application.Features.Queries;
 using CentralNegocio.Application.Interfaces.Base;
 using CentralNegocio.Application.Interfaces.Infraestructure;
 using CentralNegocio.Domain.Common;
+using CentralNegocio.Shared.Helpers;
 using static CentralNegocio.Model.Entity.EnumTypes;
 
 namespace CentralNegocio.Application.Features.Handlers
@@ -53,7 +54,7 @@ namespace CentralNegocio.Application.Features.Handlers
                     decimal meses = 12;
                     DateTime dateTime = DateTime.Now;
                     int mes_inicial = dateTime.Month;
-                    decimal? saldo_inicial = objResponse.cuenta!.saldo_disponible;
+                    decimal? saldo_inicial = objResponse.cuenta!.saldo_disponible.ToNumDecimal(2);
                     decimal? interes_mensual = objResponse.cuenta.tasa_interes / meses;
                     for (int i = 0; i <= meses; i++)
                     {
@@ -76,7 +77,7 @@ namespace CentralNegocio.Application.Features.Handlers
                         };
                         objproyeccion.Add(proyeccion_mes);
                     }
-
+                    objResponse.total = saldo_inicial.ToNumDecimal(2);
                     objResponse.proyeccion = objproyeccion;
                 }
             }

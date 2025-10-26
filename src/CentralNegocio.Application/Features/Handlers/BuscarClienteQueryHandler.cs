@@ -29,7 +29,7 @@ namespace CentralNegocio.Application.Features.Handlers
             BuscarClienteResponse objResponse = new BuscarClienteResponse();
             try
             {
-                ResponseBase<GetClienteResponse> objCliente = await _clientesService.ClientePorCedula(RequestData.identificacion!, IdTraking);
+                ResponseBase<GetClienteResponse> objCliente = await _clientesService.ClientePorId((int)RequestData.cliente_id!, IdTraking);
                 if (!objCliente.error.success)
                     return await ErrorResponse<BuscarClienteResponse>(IdTraking, objCliente.error.codeError, Status: 500);
 

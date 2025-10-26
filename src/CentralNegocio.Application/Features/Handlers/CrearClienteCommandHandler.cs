@@ -52,7 +52,8 @@ namespace CentralNegocio.Application.Features.Handlers
                         apellido_paterno = RequestData.apellido_paterno,
                         identificacion = RequestData.identificacion,
                         primer_nombre = RequestData.primer_nombre,
-                        segundo_nombre = RequestData.segundo_nombre,                        
+                        segundo_nombre = RequestData.segundo_nombre,    
+                        username = RequestData.user_name,                        
                     }, IdTraking);
                 }
                 if (!registrado.error.success)

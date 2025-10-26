@@ -40,7 +40,10 @@ namespace CentralNegocio.Application.Features.Handlers
                 clienteDto cliente = objCliente.data!.cliente!.FirstOrDefault()!;
                 cuentaDto cuenta = objCuenta.data!.cuenta!.FirstOrDefault()!;
 
-                if (cuenta.saldo_disponible >= 100)
+                if (cuenta.saldo_disponible < 100)
+                    return await ErrorResponse<CrearCuentaAhorroPlanResponse>(IdTraking, (int)TypeError.SaldoNoDisponible, Status: 500);
+
+                if (RequestData.monto < 100)
                     return await ErrorResponse<CrearCuentaAhorroPlanResponse>(IdTraking, (int)TypeError.SaldoNoDisponible, Status: 500);
 
                 ResponseBase<CrearNumeroCuentaResponse> objNumeroCuenta = await _cuentasService.GenerarNumeroCuenta(new DTOs.Cuentas.CrearNumeroCuentaRequest()
@@ -77,8 +80,8 @@ namespace CentralNegocio.Application.Features.Handlers
                 if (!objCuenta.error.success)
                     return await ErrorResponse<CrearCuentaAhorroPlanResponse>(IdTraking, objCliente.error.codeError, Status: 500);
 
-          
 
+                cuentaDto objCuentaPlanReg = objCuentaPlan.data!.cuenta!;
                 //Movimiento Debito
                 await _cuentasService.RegistrarMovimiento(new RegisterMovimientoRequest()
                 {
@@ -108,7 +111,7 @@ namespace CentralNegocio.Application.Features.Handlers
                 //Movimiento Credito
                 await _cuentasService.RegistrarMovimiento(new RegisterMovimientoRequest()
                 {
-                    cuenta_id = cuentaPlan.cuenta_id,
+                    cuenta_id = objCuentaPlanReg.cuenta_id,
                     estado_movimiento = "Completo",
                     estado = 1,
                     fecha_hora = DateTime.Now,
@@ -116,22 +119,22 @@ namespace CentralNegocio.Application.Features.Handlers
                     motivo = "Transferencia apertura Ahorro Plan",
                     naturaleza = "CRE",
                     referencia = "",
-                    saldo_resultante = cuentaPlan.saldo_disponible + RequestData.monto,
+                    saldo_resultante = objCuentaPlanReg.saldo_disponible + RequestData.monto,
                     tipo_movimiento = "Transferencia"
                 }, IdTraking);
              
                 await _cuentasService.RegisterCuenta(new RegisterCuentaRequest()
                 {
-                    fecha_cierre = cuentaPlan.fecha_cierre,
+                    fecha_cierre = objCuentaPlanReg.fecha_cierre,
                     fecha_ultima_transaccion = DateTime.Now,
-                    saldo_actual = cuentaPlan.saldo_actual + RequestData.monto,
-                    cuenta_id = cuentaPlan.cuenta_id,
-                    saldo_disponible = cuentaPlan.saldo_disponible + RequestData.monto,
-                    tasa_interes = cuentaPlan.tasa_interes,
+                    saldo_actual = objCuentaPlanReg.saldo_actual + RequestData.monto,
+                    cuenta_id = objCuentaPlanReg.cuenta_id,
+                    saldo_disponible = objCuentaPlanReg.saldo_disponible + RequestData.monto,
+                    tasa_interes = objCuentaPlanReg.tasa_interes,
                     estado = (int)TypeStatus.Active
                 }, IdTraking);
 
-                ResponseBase<GetCuentaResponse> objCuentaPlanFin = await _cuentasService.CuentaPorId((int)cuentaPlan.cuenta_id!, IdTraking);
+                ResponseBase<GetCuentaResponse> objCuentaPlanFin = await _cuentasService.CuentaPorId((int)objCuentaPlanReg.cuenta_id!, IdTraking);
                 if (!objCuentaPlanFin.error.success)
                     return await ErrorResponse<CrearCuentaAhorroPlanResponse>(IdTraking, objCliente.error.codeError, Status: 500);
 

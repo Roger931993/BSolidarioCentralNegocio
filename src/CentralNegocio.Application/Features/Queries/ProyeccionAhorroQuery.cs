@@ -19,5 +19,7 @@ namespace CentralNegocio.Application.Features.Queries
         public clienteDto? cliente { get; set; }
         public cuentaDto? cuenta { get; set; }
         public List<proyeccionDto>? proyeccion { get; set; }
+        public decimal? total { get; set; }
     }
+    
 }

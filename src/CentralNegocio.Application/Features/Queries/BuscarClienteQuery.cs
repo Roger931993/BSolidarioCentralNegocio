@@ -9,7 +9,7 @@ namespace CentralNegocio.Application.Features.Queries
 
     public class BuscarClienteRequest
     {
-        public string? identificacion { get; set; }
+        public int? cliente_id { get; set; }
     }
 
     public class BuscarClienteResponse

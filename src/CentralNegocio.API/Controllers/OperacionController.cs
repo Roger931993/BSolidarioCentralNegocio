@@ -54,13 +54,13 @@ namespace CentralNegocio.API.Controllers
         [HttpGet("cliente/{id}")]
         [Permission("OperacionController-BuscarCliente")]
         [ProducesResponseType(typeof(BuscarClienteResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<BuscarClienteResponse>> BuscarCliente(string id)
+        public async Task<ActionResult<BuscarClienteResponse>> BuscarCliente(int id)
         {
             RequestBase<BuscarClienteRequest> request = new RequestBase<BuscarClienteRequest>()
             {
                 Request = new BuscarClienteRequest()
                 {
-                    identificacion = id
+                    cliente_id = id
                 }
             };
             await CreateDataCacheLocal(HttpContext, request);
@@ -187,6 +187,50 @@ namespace CentralNegocio.API.Controllers
             };
             await CreateDataCacheLocal(HttpContext, command);
             ResponseBase<CrearCuentaAhorroPlanResponse> objResponse = await _mediator.Send(command);
+            return OkUrban(objResponse);
+        }
+
+        /// <summary>
+        /// Registrar de deposito
+        /// </summary>
+        /// <remarks>
+        /// Permiso: OperacionController-CrearDeposito
+        /// <br/>
+        /// Descripcion: Registrar de deposito
+        /// </remarks>            
+        [HttpPost("crear-deposito")]
+        [Permission("OperacionController-CrearDeposito")]
+        [ProducesResponseType(typeof(CrearDepositoResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CrearDepositoResponse>> CrearDeposito([FromBody] CrearDepositoRequest data)
+        {
+            CrearDepositoCommand command = new CrearDepositoCommand()
+            {
+                Request = data
+            };
+            await CreateDataCacheLocal(HttpContext, command);
+            ResponseBase<CrearDepositoResponse> objResponse = await _mediator.Send(command);
+            return OkUrban(objResponse);
+        }
+
+        /// <summary>
+        /// Registrar de transferecnia
+        /// </summary>
+        /// <remarks>
+        /// Permiso: OperacionController-CrearTransferencia
+        /// <br/>
+        /// Descripcion: Registrar de transferenia
+        /// </remarks>            
+        [HttpPost("crear-transferencia")]
+        [Permission("OperacionController-CrearTransferencia")]
+        [ProducesResponseType(typeof(CrearTransferenciaResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CrearTransferenciaResponse>> CrearTransferencia([FromBody] CrearTransferenciaRequest data)
+        {
+            CrearTransferenciaCommand command = new CrearTransferenciaCommand()
+            {
+                Request = data
+            };
+            await CreateDataCacheLocal(HttpContext, command);
+            ResponseBase<CrearTransferenciaResponse> objResponse = await _mediator.Send(command);
             return OkUrban(objResponse);
         }
     }

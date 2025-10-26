@@ -14,6 +14,8 @@ namespace CentralNegocio.Application.DTOs.Clientes
         public string? apellido_paterno { get; set; }
         public string? apellido_materno { get; set; }
         public string? identificacion { get; set; }
+        public string? username { get; set; }
+
         public int? estado { get; set; }
     }
 }
