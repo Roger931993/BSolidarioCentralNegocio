@@ -122,7 +122,7 @@ namespace CentralNegocio.Application.Features.Handlers
                     saldo_resultante = objCuentaPlanReg.saldo_disponible + RequestData.monto,
                     tipo_movimiento = "Transferencia"
                 }, IdTraking);
-             
+            
                 await _cuentasService.RegisterCuenta(new RegisterCuentaRequest()
                 {
                     fecha_cierre = objCuentaPlanReg.fecha_cierre,
