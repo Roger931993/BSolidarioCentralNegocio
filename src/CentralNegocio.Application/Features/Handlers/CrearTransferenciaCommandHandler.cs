@@ -50,8 +50,8 @@ namespace CentralNegocio.Application.Features.Handlers
                 if (!objCuenta.error.success)
                     return await ErrorResponse<CrearTransferenciaResponse>(IdTraking, objCliente.error.codeError, Status: 500);
 
-                clienteDto cliente_destino = objCliente.data!.cliente!.FirstOrDefault()!;
-                cuentaDto cuenta_destino = objCuenta.data!.cuenta!.FirstOrDefault()!;
+                clienteDto cliente_destino = objCliente_Destino.data!.cliente!.FirstOrDefault()!;
+                cuentaDto cuenta_destino = objCuenta_Destino.data!.cuenta!.FirstOrDefault()!;
 
                 //Movimiento Debito
                 await _cuentasService.RegistrarMovimiento(new RegisterMovimientoRequest()

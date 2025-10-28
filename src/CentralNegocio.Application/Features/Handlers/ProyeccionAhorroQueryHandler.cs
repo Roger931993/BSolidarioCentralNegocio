@@ -36,7 +36,7 @@ namespace CentralNegocio.Application.Features.Handlers
                     return await ErrorResponse<ProyeccionAhorroResponse>(IdTraking, objCliente.error.codeError, Status: 500);
 
                 if (!objCliente.data!.cliente!.Any())
-                        return await ErrorResponse<ProyeccionAhorroResponse>(IdTraking, (int)TypeError.NoData, Status: 500);
+                    return await ErrorResponse<ProyeccionAhorroResponse>(IdTraking, (int)TypeError.NoData, Status: 500);
 
                 objResponse.cliente = objCliente.data!.cliente!.FirstOrDefault();
 
@@ -54,14 +54,23 @@ namespace CentralNegocio.Application.Features.Handlers
                     decimal meses = 12;
                     DateTime dateTime = DateTime.Now;
                     int mes_inicial = dateTime.Month;
+                    int año_inicial = dateTime.Year;
                     decimal? saldo_inicial = objResponse.cuenta!.saldo_disponible.ToNumDecimal(2);
                     decimal? interes_mensual = objResponse.cuenta.tasa_interes / meses;
-                    for (int i = 0; i <= meses; i++)
-                    {
-                        int mes = mes_inicial + (i);
-                        int año = mes > 12 ? dateTime.Year + 1 : dateTime.Year;
+                    int count = 0;
+                    for (int i = 0; i < meses; i++)
+                    {                        
+                        int mes = mes_inicial + count;
+                        count++;
+                        int año = año_inicial;
                         if (mes > 12)
-                            mes = 1;
+                        {
+                            año_inicial++;
+                            mes_inicial = 1;
+                            mes = mes_inicial;
+                            count = 1;
+                            año = año_inicial;
+                        }
 
                         decimal? valor_interes = saldo_inicial * interes_mensual;
                         saldo_inicial += valor_interes;
